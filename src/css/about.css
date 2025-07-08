@@ -1,0 +1,84 @@
+#about {
+  display: flex;
+  justify-content: inherit;
+  position: relative;
+  top: 100px;
+  margin-bottom: 100px;
+}
+.about-section-title h2 {
+  font-size: 50px;
+  font-weight: 700;
+  color:  #474342;
+}
+.about-section {
+  /* background-image: url(images/hero-light.jpg); */
+  background-image: url("../../public/images/hero-light.jpg");
+
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed; /* Makes it scroll-fixed */
+  color:  #212529; /* White text for contrast */
+  min-height: 350px;
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 768px) {
+  .about-section {
+    background-attachment: scroll; /* Mobile fallback */
+  }
+}
+
+
+.who-we-are-section {
+  background-color: #f2f3f6;
+  padding: 60px 0;
+}
+
+.who-we-are-section h2 {
+  font-weight: 700;
+  font-size: 32px;
+}
+
+.who-we-are-section p {
+  font-size: 1.125rem;
+  color: #555;
+  line-height: 1.7;
+}
+
+.who-we-are-section svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+.who-we-are-section .text-start {
+  padding-top: 1rem;
+}
+
+.text-primary {
+    opacity: 1;
+    color: #217599 !important;
+}
+/* Optional: Responsive spacing adjustments */
+@media (max-width: 767.98px) {
+  .who-we-are-section h2 {
+    font-size: 1.75rem;
+  }
+
+  .who-we-are--section p {
+    font-size: 1rem;
+  }
+
+  .who-we-are-section .text-start {
+    text-align: center !important;
+  }
+}
+
+
+#testimonials-section {
+  padding: 0px 0px 60px 0px;
+  background-color: #fff;
+}
