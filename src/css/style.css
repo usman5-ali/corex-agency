@@ -383,7 +383,7 @@ header {
   background-color: #e0e0e0;
   background-blend-mode: soft-light;
   /* background-image: url(images/person/testimonial.jpg); */
-  background-image: url("../../public/images/person/testimonial.jpg");
+  /* background-image: url("../../public/images/person/testimonial.jpg"); */
 }
 
 .section-title h2 {
@@ -967,16 +967,91 @@ header {
   color: #ffffff !important;
 }
 
-
-
-
-
-
-
-
 .faq-toggle {
   transition: transform 0.3s ease !important;
 }
 .faq-item.faq-active .faq-toggle {
   transform: rotate(180deg) !important;
+}
+
+
+/* blog-section-styling start-now */
+    .card-custom {
+      border-radius: 20px;
+      padding: 2rem;
+      position: relative;
+      height: 100%;
+    }
+
+    .card-dark {
+      background-color: #217599;
+      color: #fff;
+    }
+
+    .card-light {
+      background-color: rgb(242, 243, 245);
+    }
+
+    .arrow-icon {
+      width: 32px;
+      height: 32px;
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+    }
+
+    .card-dark .arrow-icon {
+      background-color: #0d111d; /* blue */
+      color: white;
+    }
+
+    .card-light .arrow-icon {
+      background-color: #217599;
+      color: white;
+    }
+
+    .card-title {
+      font-weight: 700;
+      line-height: 1.2;
+      font-size: 1.9rem;
+      margin-top: 2.5rem;
+    }
+
+    .card-text {
+      font-size: 0.9rem;
+      color: #6c757d;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-dark .card-text {
+      color: #ddd;
+    }
+
+    .card-img {
+      object-fit: cover;
+      aspect-ratio: 16/16;
+      border-radius: 15px !important;
+      width: 100%;
+      height: auto;
+    }
+
+
+
+      .truncate-multiline {
+  display: -webkit-box;
+  -webkit-line-clamp: 1;     /* 👈 Set number of lines you want, e.g. 1 for single-line */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.truncate-3-lines {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;       /* 👈 Limit to 3 lines */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

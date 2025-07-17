@@ -46,6 +46,7 @@ import Footer from "./footer/Footer";
 const Home = () => {
   const isotope = useRef(null);
   const [filterKey, setFilterKey] = useState("*");
+  const [blogs, setBlogs] = useState([]);
 
   useEffect(() => {
     isotope.current = new Isotope(".isotope-container", {
@@ -93,6 +94,35 @@ const Home = () => {
       });
     };
   }, []);
+
+  const blogApiFunc = async () => {
+    let apiUrl = "https://agency-laravel.wpcorex.com/blogs/all";
+    let response = await fetch(apiUrl);
+    let finalResponse = await response.json();
+    console.log("Fetched services:", finalResponse);
+    setBlogs(finalResponse);
+  };
+
+  useEffect(() => {
+    blogApiFunc();
+  }, []);
+  const [service, setService] = useState([]);
+  const [error, setError] = useState(null);
+
+  const servicesApi = async () => {
+    const servicesApiURL =
+      "https://agency-laravel.wpcorex.com/services/get-all";
+
+    const midResponse = await fetch(servicesApiURL);
+    const finalResponse = await midResponse.json();
+    setService(finalResponse);
+    console.log("Fetched services:", finalResponse);
+  };
+
+  useEffect(() => {
+    servicesApi();
+  }, []);
+
   return (
     <div>
       <Header />
@@ -176,139 +206,82 @@ const Home = () => {
           </section>
         </section>
         <div class="container-fluid section-title-intro ">
-        <div className="container section-title text-center text-start">
-          <h2 className="heading-col text-white">COREX</h2>
-          <p class="text-white">
-            <b>COREX</b> is a creative web design and development agency
-            committed to empowering businesses with digital solutions that drive
-            growth. We specialize in crafting custom websites that are not only
-            visually stunning but also{" "}
-            <b>optimized for performance, user experience, and conversions.</b>
-            With a focus on <b>modern design, responsive layouts, </b> and{" "}
-            <b>scalable development,</b> we help companies establish a strong
-            online presence that aligns with their brand and goals. Whether you
-            need a corporate website, an eCommerce platform, or a tailored web
-            application — <b>COREX</b> delivers innovative, results-driven
-            solutions.
-          </p>
-        </div>
+          <div className="container section-title text-center text-start">
+            <h2 className="heading-col text-white">COREX</h2>
+            <p class="text-white">
+              <b>COREX</b> is a creative web design and development agency
+              committed to empowering businesses with digital solutions that
+              drive growth. We specialize in crafting custom websites that are
+              not only visually stunning but also{" "}
+              <b>
+                optimized for performance, user experience, and conversions.
+              </b>
+              With a focus on <b>modern design, responsive layouts, </b> and{" "}
+              <b>scalable development,</b> we help companies establish a strong
+              online presence that aligns with their brand and goals. Whether
+              you need a corporate website, an eCommerce platform, or a tailored
+              web application — <b>COREX</b> delivers innovative, results-driven
+              solutions.
+            </p>
+          </div>
         </div>
         {/* hero-section-end */}
         {/* sevice-section */}
         {/* Services Section */}
+
         <section id="services" className="services section  pb-5">
           {/* Section Title */}
-          <div className="container section-title text-center">
-            <h2 className="heading-col">Services</h2>
+          <div
+            className="container section-title text-center"
+            data-aos="fade-up"
+          >
+            <h2>Services</h2>
             <p>
               Comprehensive, scalable, and innovative services built to elevate
               your business.
             </p>
           </div>
           {/* End Section Title */}
-          <div className="container">
-            <div className="row justify-content-center g-5">
-              <div className="col-md-6 ">
-                <div className="service-item text-start">
-                  <div className="service-icon">
-                    <i className="bi bi-code-slash" />
+          <div className="container" data-aos="fade-up" data-aos-delay={100}>
+            {Array.isArray(service) && service.length > 0 ? (
+              <div className="row justify-content-center g-5">
+                {service.map((item, index) => (
+                  <div
+                    className="col-md-6"
+                    data-aos="fade-right"
+                    data-aos-delay={100}
+                    key={index}
+                  >
+                    <div className="service-item">
+                      <div className="service-icon">
+                        <img
+                          src={`https://agency-laravel.wpcorex.com/storage/${item.image}`}
+                          className="card-img-top"
+                          alt={item.title}
+                        />
+                      </div>
+                      <div className="service-content text-start">
+                        <h3 className="truncate-multiline">{item.title}</h3>
+                        <p className="truncate-3-lines ">{item.description}</p>
+                      </div>
+                    </div>
                   </div>
-                  <div className="service-content">
-                    <h3 className="heading-col">Custom Web Development</h3>
-                    <p>
-                      Curabitur arcu erat, accumsan id imperdiet et, porttitor
-                      at sem. Nulla quis lorem ut libero malesuada feugiat.
-                      Curabitur non nulla sit amet nisl tempus convallis. Lorem
-                      ipsum dolor sit amet, consectetur adipiscing elit.
-                    </p>
-                    <a href="#" className="service-link">
-                      <span>Learn More</span>
-                      <i className="bi bi-arrow-right" />
-                    </a>
-                  </div>
-                </div>
+                ))}
               </div>
-              {/* End Service Item */}
-              <div
-                className="col-md-6"
-                data-aos="fade-left"
-                data-aos-delay={100}
-              >
-                <div className="service-item text-start">
-                  <div className="service-icon">
-                    <i className="bi bi-phone-fill" />
-                  </div>
-                  <div className="service-content">
-                    <h3 className="heading-col">Mobile App Solutions</h3>
-                    <p>
-                      Praesent sapien massa, convallis a pellentesque nec,
-                      egestas non nisi. Vivamus magna justo, lacinia eget
-                      consectetur sed. Quisque velit nisi, pretium ut lacinia
-                      in, elementum id enim. Donec rutrum congue leo eget
-                      malesuada.
-                    </p>
-                    <a href="#" className="service-link">
-                      <span>Learn More</span>
-                      <i className="bi bi-arrow-right" />
-                    </a>
-                  </div>
-                </div>
+            ) : (
+              <div className="text-center">
+                <img
+                  src="/images/not-found.webp" // 🔁 Replace this path with your fallback image
+                  alt="No Services Available"
+                  style={{ maxWidth: "400px", width: "100%" }}
+                />
+                <p className="mt-3">No services available at the moment.</p>
               </div>
-              {/* End Service Item */}
-              <div
-                className="col-md-6"
-                data-aos="fade-right"
-                data-aos-delay={200}
-              >
-                <div className="service-item text-start">
-                  <div className="service-icon">
-                    <i className="bi bi-palette2" />
-                  </div>
-                  <div className="service-content">
-                    <h3 className="heading-col">UI/UX Design</h3>
-                    <p>
-                      Pellentesque in ipsum id orci porta dapibus. Proin eget
-                      tortor risus. Vivamus suscipit tortor eget felis porttitor
-                      volutpat. Vestibulum ac diam sit amet quam vehicula
-                      elementum sed sit amet dui.
-                    </p>
-                    <a href="#" className="service-link">
-                      <span>Learn More</span>
-                      <i className="bi bi-arrow-right" />
-                    </a>
-                  </div>
-                </div>
-              </div>
-              {/* End Service Item */}
-              <div
-                className="col-md-6"
-                data-aos="fade-left"
-                data-aos-delay={200}
-              >
-                <div className="service-item text-start">
-                  <div className="service-icon">
-                    <i className="bi bi-bar-chart-line" />
-                  </div>
-                  <div className="service-content">
-                    <h3 className="heading-col">Digital Marketing</h3>
-                    <p>
-                      Donec rutrum congue leo eget malesuada. Mauris blandit
-                      aliquet elit, eget tincidunt nibh pulvinar a. Nulla
-                      porttitor accumsan tincidunt. Curabitur aliquet quam id
-                      dui posuere blandit.
-                    </p>
-                    <a href="#" className="service-link">
-                      <span>Learn More</span>
-                      <i className="bi bi-arrow-right" />
-                    </a>
-                  </div>
-                </div>
-              </div>
-              {/* End Service Item */}
-            </div>
+            )}
           </div>
         </section>
         {/* /Services Section */}
+
         {/* Portfolio Section */}
 
         <section id="portfolio" className="portfolio section mb-5">
@@ -526,8 +499,63 @@ const Home = () => {
         </section>
 
         {/* testimonial section end now */}
+
+        {/* Blog Section Start */}
+        <section id="blog-section text-start">
+          <div className="container section-title ">
+            <h2 className="heading-col ">Clients Success Spotlights</h2>
+            <p>
+              Hear what our satisfied clients say about our creative solutions,
+              results-driven work, and professional service.
+            </p>
+          </div>
+          <div className="container">
+            {blogs.length === 0 ? (
+              <div className="text-center">
+                <img
+                  src="/images/not-found-webp" // 🔁 Replace with your actual image path
+                  alt="No Blogs Available"
+                  style={{ maxWidth: "400px", width: "100%" }}
+                />
+                <p className="mt-3">No blog posts available at the moment.</p>
+              </div>
+            ) : (
+              <div className="row g-4">
+                {blogs.slice(0, 3).map((item, index) => (
+                  <div key={index} className="col-md-4">
+                    <div
+                      className="card-custom card-light text-start"
+                      id={`blog-card-${index + 1}`}
+                    >
+                      <div className="arrow-icon">
+                        <i className="bi bi-arrow-up-right" />
+                      </div>
+                      <h4 className="card-title mb-3 truncate-multiline">
+                        {item.title}
+                      </h4>
+                      <p className="card-text truncate-3-lines ">
+                        {item.description}
+                      </p>
+                      <p className="card-text">
+                        {item.created_at
+                          ? item.created_at.split("T")[0]
+                          : "No date"}
+                      </p>
+                      <img
+                        src={`https://agency-laravel.wpcorex.com/storage/${item.image}`}
+                        alt={item.title || "Blog Image"}
+                        className="card-img"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </section>
+        {/* Blog Section End */}
         {/* Faq Section */}
-        <section id="faq" className="faq section  text-start">
+        <section id="faq" className="faq section  text-start mt-5">
           <div class="container section-title text-center" data-aos="fade-up">
             <h2>Frequently Asked Questions</h2>
             <p>
