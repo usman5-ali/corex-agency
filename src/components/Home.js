@@ -8,7 +8,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
-
+import { Helmet } from "react-helmet-async";
 import { Fragment } from "react/jsx-runtime";
 import Header from "./header/Header";
 import Footer from "./footer/Footer";
@@ -44,6 +44,27 @@ import Footer from "./footer/Footer";
 </>;
 
 const Home = () => {
+  const [tags, setTags] = useState([]);
+  const [hero, setHero] = useState([]);
+  useEffect(() => {
+    fetch("https://agency-laravel.wpcorex.com/tags/get-all")
+        .then((res) => res.json())
+        .then((data) => {
+          const aboutTags = data.filter(tag => tag.page_name.toLowerCase() === "home");
+          setTags(aboutTags);
+
+          // Set <meta name="keywords">
+          const keywords = aboutTags.map(tag => tag.tag_name).join(", ");
+          let meta = document.querySelector("meta[name='keywords']");
+          if (!meta) {
+            meta = document.createElement("meta");
+            meta.name = "keywords";
+            document.head.appendChild(meta);
+          }
+          meta.setAttribute("content", keywords);
+        })
+        .catch((err) => console.error("Failed to fetch tags:", err));
+  }, []);
   const isotope = useRef(null);
   const [filterKey, setFilterKey] = useState("*");
   const [blogs, setBlogs] = useState([]);
@@ -94,6 +115,17 @@ const Home = () => {
       });
     };
   }, []);
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/heros/get-all")
+        .then((res) => res.json())
+        .then((data) => {
+          const aboutTags = data.filter(tag => tag.page_name.toLowerCase() === "home");
+          setHero(aboutTags);
+          console.log('data',aboutTags)
+          // Set <meta name="keywords">
+        })
+        .catch((err) => console.error("Failed to fetch tags:", err));
+  }, []);
 
   const blogApiFunc = async () => {
     let apiUrl = "https://agency-laravel.wpcorex.com/blogs/all";
@@ -107,8 +139,9 @@ const Home = () => {
     blogApiFunc();
   }, []);
   const [service, setService] = useState([]);
+  const [faqs, setFaq] = useState([]);
   const [error, setError] = useState(null);
-
+const [activeIndex, setActiveIndex] = useState(null);
   const servicesApi = async () => {
     const servicesApiURL =
       "https://agency-laravel.wpcorex.com/services/get-all";
@@ -118,11 +151,22 @@ const Home = () => {
     setService(finalResponse);
     console.log("Fetched services:", finalResponse);
   };
+const faqsApi = async () => {
+    const faqsApiURL =
+      "https://agency-laravel.wpcorex.com/faqs/get-all";
 
+    const midResponse = await fetch(faqsApiURL);
+    const finalResponse = await midResponse.json();
+    setFaq(finalResponse);
+    console.log("Fetched faqsApi:", finalResponse);
+  };
   useEffect(() => {
     servicesApi();
+    faqsApi();
   }, []);
-
+const toggleFAQ = (index) => {
+    setActiveIndex(activeIndex === index ? null : index);
+  };
   return (
     <div>
       <Header />
@@ -137,18 +181,16 @@ const Home = () => {
               <div className="row align-items-center gy-5">
                 {/* Left Column */}
                 <div className="col-lg-6">
-                  <h1 className="fw-bold display-5 mb-4 heading-col">
-                    Let’s Work
-                    <br />
-                    Together to Create
-                    <br />
-                    Wonders with Us
-                  </h1>
-                  <p className="text-muted fs-5 mb-4">
-                    A visionary creative, crafting captivating wonders through
-                    art and design. Adept at turning imagination into
-                    extraordinary reality.
-                  </p>
+                  <div className="container about-section-title my-3 py-5 text-start">
+                    {hero.length > 0 && (
+                    <h2 className="pt-4 heading-col">{hero[0].title}</h2>
+                    )}
+                    {hero.length > 0 && (
+                    <p className="fs-5">
+                      <div dangerouslySetInnerHTML={{ __html: hero[0]?.description }} />
+                    </p>
+                    )}
+                  </div>
                   <div className="d-flex gap-3 mb-4">
                     <a href="#" className="btn btn-purple  rounded-pill py-2">
                       Let’s Talk
@@ -208,21 +250,13 @@ const Home = () => {
         <div class="container-fluid section-title-intro ">
           <div className="container section-title text-center text-start">
             <h2 className="heading-col text-white">COREX</h2>
+           {hero.length > 0 && (
             <p class="text-white">
-              <b>COREX</b> is a creative web design and development agency
-              committed to empowering businesses with digital solutions that
-              drive growth. We specialize in crafting custom websites that are
-              not only visually stunning but also{" "}
-              <b>
-                optimized for performance, user experience, and conversions.
-              </b>
-              With a focus on <b>modern design, responsive layouts, </b> and{" "}
-              <b>scalable development,</b> we help companies establish a strong
-              online presence that aligns with their brand and goals. Whether
-              you need a corporate website, an eCommerce platform, or a tailored
-              web application — <b>COREX</b> delivers innovative, results-driven
-              solutions.
+            
+              <div dangerouslySetInnerHTML={{ __html: hero[0]?.about }} />
+              
             </p>
+            )}
           </div>
         </div>
         {/* hero-section-end */}
@@ -606,104 +640,23 @@ const Home = () => {
               </div>
               <div className="col-lg-6" data-aos="fade-up" data-aos-delay={300}>
                 <div className="faq-accordion">
-                  <div className="faq-item faq-active">
-                    <div className="faq-header">
-                      <h3>What services does your agency provide?</h3>
-                      <i className="bi bi-chevron-down faq-toggle" />
-                    </div>
-                    <div className="faq-content">
-                      <p>
-                        We specialize in web design and development, branding,
-                        UI/UX design, SEO, digital marketing, and custom
-                        software solutions tailored to your business goals.
-                      </p>
-                    </div>
-                  </div>
-                  {/* End FAQ Item*/}
-                  <div
-                    className="faq-item"
-                    data-aos="zoom-in"
-                    data-aos-delay={200}
-                  >
-                    <div className="faq-header">
-                      <h3>How long does it take to build a website?</h3>
-                      <i className="bi bi-chevron-down faq-toggle" />
-                    </div>
-                    <div className="faq-content">
-                      <p>
-                        The timeline depends on the complexity of the project. A
-                        typical business website takes around 3–5 weeks, while
-                        custom platforms may take longer. We always provide
-                        clear timelines before starting.
-                      </p>
-                    </div>
-                  </div>
-                  {/* End FAQ Item*/}
-                  <div className="faq-item">
-                    <div className="faq-header">
-                      <h3>Do you offer SEO services?</h3>
-                      <i className="bi bi-chevron-down faq-toggle" />
-                    </div>
-                    <div className="faq-content">
-                      <p>
-                        Yes! We offer on-page and off-page SEO, keyword
-                        research, content optimization, and technical SEO to
-                        help your website rank better and attract more organic
-                        traffic.
-                      </p>
-                    </div>
-                  </div>
-                  {/* End FAQ Item*/}
-                  <div className="faq-item">
-                    <div className="faq-header">
-                      <h3>Will my website be mobile-friendly?</h3>
-                      <i className="bi bi-chevron-down faq-toggle" />
-                    </div>
-                    <div className="faq-content">
-                      <p>
-                        Absolutely. All our websites are fully responsive and
-                        optimized to provide an excellent user experience across
-                        all devices — smartphones, tablets, and desktops.
-                      </p>
-                    </div>
-                  </div>
-                  {/* End FAQ Item*/}
-                  <div className="faq-item">
-                    <div className="faq-header">
-                      <h3>Do you provide ongoing support and maintenance?</h3>
-                      <i className="bi bi-chevron-down faq-toggle" />
-                    </div>
-                    <div className="faq-content">
-                      <p>
-                        Yes, we offer post-launch support plans including
-                        updates, bug fixes, content changes, backups, and
-                        performance monitoring to keep your site running
-                        smoothly.
-                      </p>
-                    </div>
-                  </div>
-                  {/* End FAQ Item*/}
-                  {/* End FAQ Item */}
-                  <div className="faq-item">
-                    <div className="faq-header">
-                      <h3>
-                        What makes COREX different from other web agencies?
-                      </h3>
-                      <i className="bi bi-chevron-down faq-toggle" />
-                    </div>
-                    <div className="faq-content">
-                      <p>
-                        At COREX, we blend creative design with technical
-                        expertise to deliver fully customized, results-driven
-                        solutions. Unlike cookie-cutter agencies, we take the
-                        time to understand your business goals, ensuring every
-                        project is tailored for performance, usability, and
-                        conversion. We also offer end-to-end services — from
-                        branding and UX to development and marketing.
-                      </p>
-                    </div>
-                  </div>
-                  {/* End FAQ Item */}
+                   {faqs.map((faq, index) => (
+            <div
+              className={`faq-item ${activeIndex === index ? "faq-active" : ""}`}
+              key={faq.id}
+            >
+              <div className="faq-header" onClick={() => toggleFAQ(index)}>
+                <h3>{faq.question}</h3>
+                <i className="bi bi-chevron-down faq-toggle" />
+              </div>
+              <div
+                className="faq-content"
+                style={{ display: activeIndex === index ? "block" : "none" }}
+              >
+                <p>{faq.answer}</p>
+              </div>
+            </div>
+          ))}
                 </div>
               </div>
             </div>

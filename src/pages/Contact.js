@@ -1,8 +1,40 @@
-import React, { useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import Header from '../components/header/Header';
 import Footer from '../components/footer/Footer';
 
 const ContactPage = () => {
+  const [tags, setTags] = useState([]);
+  const [hero, setHero] = useState([]);
+  useEffect(() => {
+    fetch("https://agency-laravel.wpcorex.com/tags/get-all")
+        .then((res) => res.json())
+        .then((data) => {
+          const aboutTags = data.filter(tag => tag.page_name.toLowerCase() === "contact");
+          setTags(aboutTags);
+
+          // Set <meta name="keywords">
+          const keywords = aboutTags.map(tag => tag.tag_name).join(", ");
+          let meta = document.querySelector("meta[name='keywords']");
+          if (!meta) {
+            meta = document.createElement("meta");
+            meta.name = "keywords";
+            document.head.appendChild(meta);
+          }
+          meta.setAttribute("content", keywords);
+        })
+        .catch((err) => console.error("Failed to fetch tags:", err));
+  }, []);
+  useEffect(() => {
+    fetch("https://agency-laravel.wpcorex.com/heros/get-all")
+        .then((res) => res.json())
+        .then((data) => {
+          const aboutTags = data.filter(tag => tag.page_name.toLowerCase() === "contact");
+          setHero(aboutTags);
+          console.log('data',aboutTags)
+          // Set <meta name="keywords">
+        })
+        .catch((err) => console.error("Failed to fetch tags:", err));
+  }, []);
   const [activeIndex, setActiveIndex] = useState(0); // Default: first accordion open
 
   const faqs = [
@@ -50,13 +82,14 @@ const ContactPage = () => {
         {/* Hero Section */}
         <section id="about" className="container-fluid about-section text-start">
           <div className="container about-section-title my-3 py-5">
-            <h2 className="pt-4">Contact Us</h2>
+            {hero.length > 0 && (
+            <h2 className="pt-4">{hero[0].title}</h2>
+             )}
+            {hero.length > 0 && (
             <p className="fs-5">
-              Whether you’re ready to start a project or simply want to learn more
-              about our services, our team is here to help. At Corex, we value open
-              communication and timely support. Reach out to us through email, phone,
-              or our contact form — and let’s build something amazing together.
+            {hero[0]?.description.replace(/<[^>]*>/g, '')}
             </p>
+            )}
           </div>
         </section>
 
@@ -141,15 +174,14 @@ const ContactPage = () => {
         {/* Final Section */}
         <div className="container-fluid section-title-intro">
         <div className="container section-title  text-center shadow-sm py-5">
-          <h2 className="text-white">Your Vision, Our Mission – Let’s Achieve It.</h2>
-          <p className="text-white">
-            At Corex, we are a full-service creative agency focused on
-            delivering tailored solutions in branding, website design, and
-            digital marketing. Our mission is to help businesses enhance their
-            online presence and reach their audience effectively. With a wide
-            range of professional services, we empower you to build a unique and
-            results-driven digital identity.
-          </p>
+          {hero.length > 0 && (
+          <h2 className="text-white">{hero[0].vtitle}</h2>
+          )}
+          {hero.length > 0 && (
+          <p className="text-white" dangerouslySetInnerHTML={{ __html: hero[0]?.vdescription }}/>
+
+          
+          )}
         </div>
           </div>
       </main>

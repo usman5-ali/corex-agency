@@ -8,7 +8,38 @@ import Footer from "../components/footer/Footer";
 const Portfolio = () => {
   const isotope = useRef(null);
   const [filterKey, setFilterKey] = useState("*");
+  const [tags, setTags] = useState([]);
+  const [hero, setHero] = useState([]);
+  useEffect(() => {
+    fetch("https://agency-laravel.wpcorex.com/tags/get-all")
+        .then((res) => res.json())
+        .then((data) => {
+          const aboutTags = data.filter(tag => tag.page_name.toLowerCase() === "portfolio");
+          setTags(aboutTags);
 
+          // Set <meta name="keywords">
+          const keywords = aboutTags.map(tag => tag.tag_name).join(", ");
+          let meta = document.querySelector("meta[name='keywords']");
+          if (!meta) {
+            meta = document.createElement("meta");
+            meta.name = "keywords";
+            document.head.appendChild(meta);
+          }
+          meta.setAttribute("content", keywords);
+        })
+        .catch((err) => console.error("Failed to fetch tags:", err));
+  }, []);
+  useEffect(() => {
+    fetch("https://agency-laravel.wpcorex.com/heros/get-all")
+        .then((res) => res.json())
+        .then((data) => {
+          const aboutTags = data.filter(tag => tag.page_name.toLowerCase() === "portfolio");
+          setHero(aboutTags);
+          console.log('data',aboutTags)
+          // Set <meta name="keywords">
+        })
+        .catch((err) => console.error("Failed to fetch tags:", err));
+  }, []);
   useEffect(() => {
     isotope.current = new Isotope(".isotope-container", {
       itemSelector: ".isotope-item",
@@ -95,13 +126,16 @@ const Portfolio = () => {
       <main>
         {/* hero-section */}
         <section id="about" className="container-fluid about-section text-start">
+          
           <div className="container about-section-title my-3 py-5">
-            <h2 className="pt-4">Our Work Speaks for Itself</h2>
+            {hero.length > 0 && (
+            <h2 className="pt-4">{hero[0].title}</h2>
+             )}
+            {hero.length > 0 && (
             <p className="fs-5">
-             At <b>COREX</b>, we specialize in crafting stunning, high-performance digital experiences that drive results. From sleek websites to powerful web applications, our team blends <b>design excellence, technical expertise, and business insight</b> to bring your vision to life. Whether you're starting fresh or scaling up, we deliver <b>responsive, user-focused, and growth-ready</b> solutions tailored to your goals.
-
-
+            {hero[0]?.description.replace(/<[^>]*>/g, '')}
             </p>
+            )}
           </div>
         </section>
         {/* hero-section-end */}
@@ -166,15 +200,14 @@ const Portfolio = () => {
         {/* Bottom Content */}
          <div className="container-fluid section-title-intro">
         <div className="container section-title  text-center shadow-sm py-5">
-          <h2 className="text-white">Your Vision, Our Mission – Let’s Achieve It.</h2>
-          <p className="text-white">
-            At Corex, we are a full-service creative agency focused on
-            delivering tailored solutions in branding, website design, and
-            digital marketing. Our mission is to help businesses enhance their
-            online presence and reach their audience effectively. With a wide
-            range of professional services, we empower you to build a unique and
-            results-driven digital identity.
-          </p>
+          {hero.length > 0 && (
+          <h2 className="text-white">{hero[0].vtitle}</h2>
+          )}
+          {hero.length > 0 && (
+          <p className="text-white" dangerouslySetInnerHTML={{ __html: hero[0]?.vdescription }}/>
+
+          
+          )}
         </div>
           </div>
       </main>

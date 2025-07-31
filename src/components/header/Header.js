@@ -98,18 +98,18 @@ const Header = () => {
             </Nav.Link>
             <Nav.Link
               as={Link}
-              to="/About"
+              to="/about"
               className={`nav-link ${
-                location.pathname === "/About" ? "active" : ""
+                location.pathname === "/about" ? "active" : ""
               }`}
             >
               ABOUT US
             </Nav.Link>
             <Nav.Link
               as={Link}
-              to="/Services"
+              to="/services"
               className={`nav-link ${
-                location.pathname === "/Services" ? "active" : ""
+                location.pathname === "/services" ? "active" : ""
               }`}
             >
               SERVICES
@@ -125,18 +125,18 @@ const Header = () => {
             </Nav.Link>
             <Nav.Link
               as={Link}
-              to="/Testimonials"
+              to="/testimonials"
               className={`nav-link ${
-                location.pathname === "/Testimonials" ? "active" : ""
+                location.pathname === "/testimonials" ? "active" : ""
               }`}
             >
               TESTIMONIALS
             </Nav.Link>
             <Nav.Link
               as={Link}
-              to="/Contact"
+              to="/contact"
               className={`nav-link ${
-                location.pathname === "/Contact" ? "active" : ""
+                location.pathname === "/contact" ? "active" : ""
               }`}
             >
               CONTACT US

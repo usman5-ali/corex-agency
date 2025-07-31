@@ -1,7 +1,42 @@
-import React from "react";
+
 import Header from "../components/header/Header";
 import Footer from "../components/footer/Footer";
+import React, { useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
+import { useLocation } from "react-router-dom";
 const About = () => {
+  const [tags, setTags] = useState([]);
+  const [hero, setHero] = useState([]);
+  useEffect(() => {
+    fetch("https://agency-laravel.wpcorex.com/tags/get-all")
+        .then((res) => res.json())
+        .then((data) => {
+          const aboutTags = data.filter(tag => tag.page_name.toLowerCase() === "about");
+          setTags(aboutTags);
+
+          // Set <meta name="keywords">
+          const keywords = aboutTags.map(tag => tag.tag_name).join(", ");
+          let meta = document.querySelector("meta[name='keywords']");
+          if (!meta) {
+            meta = document.createElement("meta");
+            meta.name = "keywords";
+            document.head.appendChild(meta);
+          }
+          meta.setAttribute("content", keywords);
+        })
+        .catch((err) => console.error("Failed to fetch tags:", err));
+  }, []);
+  useEffect(() => {
+    fetch("https://agency-laravel.wpcorex.com/heros/get-all")
+        .then((res) => res.json())
+        .then((data) => {
+          const aboutTags = data.filter(tag => tag.page_name.toLowerCase() === "about");
+          setHero(aboutTags);
+          console.log('data',aboutTags)
+          // Set <meta name="keywords">
+        })
+        .catch((err) => console.error("Failed to fetch tags:", err));
+  }, []);
   return (
     <div>
       <Header />
@@ -9,19 +44,14 @@ const About = () => {
         {/* hero-section */}
         <section id="about" className="container-fluid about-section">
           <div className="container about-section-title my-3 py-5 text-start">
-            <h2 className="pt-4 heading-col">About COREX</h2>
+            {hero.length > 0 && (
+            <h2 className="pt-4 heading-col">{hero[0].title}</h2>
+            )}
+            {hero.length > 0 && (
             <p className="fs-5">
-              At <b>COREX</b>, we specialize in building impactful digital
-              experiences through creative web design and robust web
-              development. As a passionate team of developers and designers, we
-              are dedicated to crafting custom websites that not only look great
-              but also perform flawlessly. Whether you're a startup, small
-              business, or growing brand, we offer tailored digital solutions
-              that help you grow your online presence, engage your audience, and
-              boost your marketing efforts. With a focus on innovation,
-              performance, and user experience — we make sure your website
-              reflects your brand, your goals, and your vision.
+              {hero[0]?.description.replace(/<[^>]*>/g, '')}
             </p>
+            )}
           </div>
         </section>
         {/* hero-section-end */}
