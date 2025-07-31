@@ -263,57 +263,76 @@ const toggleFAQ = (index) => {
         {/* sevice-section */}
         {/* Services Section */}
 
-        <section id="services" className="services section  pb-5">
-          {/* Section Title */}
-          <div
-            className="container section-title text-center"
-            data-aos="fade-up"
-          >
-            <h2>Services</h2>
-            <p>
-              Comprehensive, scalable, and innovative services built to elevate
-              your business.
-            </p>
-          </div>
-          {/* End Section Title */}
-          <div className="container" data-aos="fade-up" data-aos-delay={100}>
-            {Array.isArray(service) && service.length > 0 ? (
-              <div className="row justify-content-center g-5">
-                {service.map((item, index) => (
-                  <div
-                    className="col-md-6"
-                    data-aos="fade-right"
-                    data-aos-delay={100}
-                    key={index}
-                  >
-                    <div className="service-item">
-                      <div className="service-icon">
+        <section className="py-5" id="services-section">
+          <div className="container">
+            {/* Title */}
+            <div
+              className="container section-title text-center"
+              data-aos="fade-up"
+            >
+              <h2>Services</h2>
+              <p>
+                Comprehensive, scalable, and innovative services built to
+                elevate your business.
+              </p>
+            </div>
+
+            {/* Services Grid */}
+            <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+              {Array.isArray(service) &&
+                service.slice(0, 6).map((item, index) => (
+                  <div className="col mb-5" key={index}>
+                    <div className="text-center px-3 mx-4">
+                      {/* Image container */}
+                      <div
+                        className="d-flex justify-content-center align-items-center mx-auto mb-3 mt-2"
+                        style={{
+                          width: "100px",
+                          height: "100px",
+                          overflow: "hidden",
+                          borderRadius: "10px",
+                        }}
+                      >
                         <img
                           src={`https://agency-laravel.wpcorex.com/storage/${item.image}`}
-                          className="card-img-top"
+                          className="img-fluid"
                           alt={item.title}
+                          style={{
+                            maxWidth: "100%",
+                            maxHeight: "100%",
+                            objectFit: "cover",
+                          }}
                         />
                       </div>
-                      <div className="service-content text-start">
-                        <h3 className="truncate-multiline">{item.title}</h3>
-                        <p className="truncate-3-lines ">{item.description}</p>
-                      </div>
+
+                      {/* Title with limit */}
+                      <h4 className="fw-bold text-truncate" title={item.title}>
+                        {item.title.length > 40
+                          ? item.title.slice(0, 40) + "..."
+                          : item.title}
+                      </h4>
+
+                      {/* Description with limit */}
+                      <p className="fs-6">
+                        {item.description.length > 120
+                          ? item.description.slice(0, 120) + "..."
+                          : item.description}
+                      </p>
                     </div>
                   </div>
                 ))}
+            </div>
+             <div className="text-center mt-4">
+                <Link
+                  to="/services"
+                  className="btn view-btn rounded-pill px-4 py-2"
+                >
+                  View More
+                </Link>
               </div>
-            ) : (
-              <div className="text-center">
-                <img
-                  src="/images/not-found.webp" // 🔁 Replace this path with your fallback image
-                  alt="No Services Available"
-                  style={{ maxWidth: "400px", width: "100%" }}
-                />
-                <p className="mt-3">No services available at the moment.</p>
-              </div>
-            )}
           </div>
         </section>
+
         {/* /Services Section */}
 
         {/* Portfolio Section */}
